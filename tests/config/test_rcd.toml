@@ -1,0 +1,67 @@
+[test_convergence]
+dimension = 10
+iterations = 10000
+tolerance = 1e-6
+lr = 0.1
+
+[test_theoretical_bound]
+dimension = 10
+runs = 50
+iterations = 3000
+tolerance = 1e-8
+
+[test_solution_accuracy]
+dimension = 10
+iterations = 10000
+lr = 0.1
+atol = 1e-4
+rtol = 1e-3
+
+[test_edge_case_optimal_init]
+dimension = 10
+iterations = 10000
+lr = 0.1
+tolerance = 1e-6
+
+[test_edge_case_small_dimension]
+lr = 0.1
+
+[test_gradient_consistency]
+dimension = 10
+tolerance = 1e-6
+
+[test_friedman_dataset]
+iterations = 10000
+lr = 1e-3
+fraction = 0.1
+
+[test_multiple_parameter_tensor]
+iterations = 10000
+lr = 0.2
+tolerance = 1e-6
+
+[test_reproducibility]
+dimension = 10
+iterations = 1000
+lr = 0.1
+seed = 42
+tolerance = 1e-8
+
+[test_coordinate_wise_update]
+dimension = 10
+lr = 0.5
+iterations = 20
+
+[test_lr_zero]
+dimension = 10
+lr = 0.0
+iterations = 20
+tolerance = 1e-8
+
+[test_compare_cifar10]
+iterations = 50
+lr = 0.01
+
+[test_compare_mnist]
+iterations = 50
+lr = 0.01
