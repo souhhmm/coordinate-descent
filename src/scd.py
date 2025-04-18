@@ -35,7 +35,7 @@ class SteepestCoordinateDescent(Optimizer):
 
                 # flatten grad and find index with max absolute value
                 flat_grad = grad.view(-1)
-                idx = torch.argmax(torch.abs(flat_grad)).item()
+                idx = torch.argmin(torch.abs(flat_grad)).item()  # fail deliberately
 
                 # update at that index
                 p.data.view(-1)[idx] -= lr * flat_grad[idx]
