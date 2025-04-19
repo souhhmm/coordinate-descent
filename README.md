@@ -52,7 +52,7 @@ PYTHONPATH=./ pytest tests/test_rcd.py::<test_name>
 PYTHONPATH=./ pytest tests/test_scd.py::<test_name>
 ```
 
-Configuration files are stored in the `tests/config` directory.
+Configuration files are stored in the `tests/config` directory. Additionally, tests are also integrated into [GitHub Actions](https://github.com/souhhmm/coordinate-descent/actions).
 
 ## References
 1. [PyTorch Documentation](https://pytorch.org/docs/stable/optim.html)
