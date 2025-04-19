@@ -414,6 +414,11 @@ def test_type_errors():
         SteepestCoordinateDescent([x], lr=-0.1)
 
 
+def test_empty_param():
+    with pytest.raises(Exception):
+        SteepestCoordinateDescent([], lr=0.1)
+
+
 def test_multiple_parameter_tensor():
     torch.manual_seed(42)
 
