@@ -1,11 +1,13 @@
 import logging
+import sys
+
+sys.path.append("./")
 
 import numpy as np
 import pytest
 import tomllib
 import torch
 import torch.nn as nn
-import torch.nn.init as init
 
 from src.rcd import RandomizedCoordinateDescent
 
@@ -357,8 +359,8 @@ def test_friedman_dataset(n_samples, n_features, noise_std):
     # simple linear regression model
     model = nn.Linear(n_features, 1)
 
-    init.zeros_(model.weight)
-    init.zeros_(model.bias)
+    nn.init.zeros_(model.weight)
+    nn.init.zeros_(model.bias)
 
     criterion = nn.MSELoss()
 
@@ -557,9 +559,9 @@ def test_lr_zero():
 
 
 def test_compare_cifar10():
+    import torch.nn as nn
     import torchvision
     import torchvision.transforms as transforms
-    import torch.nn as nn
 
     batch_size = 32
     transform = transforms.Compose(
@@ -627,9 +629,9 @@ def test_compare_cifar10():
 
 
 def test_compare_mnist():
+    import torch.nn as nn
     import torchvision
     import torchvision.transforms as transforms
-    import torch.nn as nn
 
     batch_size = 32
     transform = transforms.Compose(
