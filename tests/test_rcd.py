@@ -247,14 +247,16 @@ def test_gradient_consistency():
     assert torch.allclose(hessian, hessian.T, rtol=tol, atol=tol)
 
 
-@pytest.mark.xfail(reason="Convergence may fail due to ill-conditioning.")
+@pytest.mark.xfail(
+    reason="Convergence may fail due to ill conditioning. Try increasing the number of iterations or decreasing the learning rate."
+)
 def test_outlier_values():
     torch.manual_seed(42)
 
-    d = 10
+    d = config["test_outlier_values"]["dimension"]
     diag_values = torch.ones(d)
-    diag_values[0] = 4e-1  # small value
-    diag_values[1] = 0.25e3  # large value
+    diag_values[0] = config["test_outlier_values"]["diag0"]  # small value
+    diag_values[1] = config["test_outlier_values"]["diag1"]  # large value
     A = torch.diag(diag_values)  # ill conditioned matrix
     b = torch.randn(d) * 10
 
@@ -264,21 +266,24 @@ def test_outlier_values():
 
     x = torch.zeros(d, requires_grad=True)
     # L = diag_values.max().item()
-    optimizer = RandomizedCoordinateDescent([x], lr=1e-5)
+    optimizer = RandomizedCoordinateDescent([x], lr=config["test_outlier_values"]["lr"])
 
-    for i in range(100000):
+    num_iters = config["test_outlier_values"]["iterations"]
+    for i in range(num_iters):
         optimizer.zero_grad()
         loss = f.loss(x)
         if torch.isnan(loss) or torch.isinf(loss):
             pytest.fail(f"Loss became NaN or Inf at iteration {i}")
         loss.backward()
         optimizer.step()
-        if abs(f.loss(x).item() - f_opt) < 1e-2:
+        if abs(f.loss(x).item() - f_opt) < config["test_outlier_values"]["tolerance"]:
             break
 
     final_gap = abs(f.loss(x).item() - f_opt)
     logger.info("Final loss gap: %.2e", final_gap)
-    assert final_gap < 1e-2, "Did not converge with outlier values"
+    assert (
+        final_gap < config["test_outlier_values"]["tolerance"]
+    ), "Did not converge with outlier values"
 
 
 # def generate_friedman1(

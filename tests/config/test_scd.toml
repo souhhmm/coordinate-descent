@@ -30,6 +30,14 @@ lr = 0.1
 dimension = 10
 tolerance = 1e-6
 
+[test_outlier_values]
+dimension = 10
+diag0 = 4e-1
+diag1 = 0.25e3
+iterations = 100000
+lr = 1e-5
+tolerance = 1e-2
+
 [test_friedman_dataset]
 iterations = 10000
 lr = 1e-3
