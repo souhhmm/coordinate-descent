@@ -4,6 +4,12 @@ iterations = 10000
 tolerance = 1e-6
 lr = 0.1
 
+[test_gpu_compatibility]
+dimension = 10
+iterations = 5
+lr = 0.1
+tolerance = 1e-6
+
 [test_theoretical_bound]
 dimension = 10
 runs = 50

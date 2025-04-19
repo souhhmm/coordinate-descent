@@ -68,6 +68,38 @@ def test_convergence():
     ), "Optimization did not converge sufficiently"
 
 
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA not available")
+def test_gpu_compatibility():
+    torch.manual_seed(42)
+
+    d = config["test_gpu_compatibility"]["dimension"]
+    # make everything on CUDA
+    Q = torch.randn(d, d, device="cuda")
+    A = Q.T @ Q + 0.1 * torch.eye(d, device="cuda")
+    b = torch.randn(d, device="cuda")
+
+    # initial x on GPU
+    x = torch.zeros(d, device="cuda", requires_grad=True)
+    optimizer = SteepestCoordinateDescent(
+        [x], lr=config["test_gpu_compatibility"]["lr"]
+    )
+    f = QuadraticFunction(A, b)
+
+    num_iters = config["test_gpu_compatibility"]["iterations"]
+    initial_x = x.clone().detach()
+    for _ in range(num_iters):
+        optimizer.zero_grad()
+        loss = f.loss(x)
+        loss.backward()
+        optimizer.step()
+
+    # ensure we moved to GPU and x has been updated
+    assert x.device.type == "cuda", "Parameters not on CUDA device"
+    assert not torch.allclose(
+        x.detach(), initial_x, atol=config["test_gpu_compatibility"]["tolerance"]
+    ), "x did not change on GPU"
+
+
 def test_theoretical_bound():
     torch.manual_seed(42)
     np.random.seed(42)
@@ -644,9 +676,9 @@ def test_compare_mnist():
         model_sgd, optimizer_sgd, images, labels, criterion, num_iters
     )
 
-    logger.info(f"RCD:  Initial={loss0_rcd:.4f}, Final={loss1_rcd:.4f}")
+    logger.info(f"RCD: Initial={loss0_rcd:.4f}, Final={loss1_rcd:.4f}")
     logger.info(f"Adam: Initial={loss0_adam:.4f}, Final={loss1_adam:.4f}")
-    logger.info(f"SGD:  Initial={loss0_sgd:.4f}, Final={loss1_sgd:.4f}")
+    logger.info(f"SGD: Initial={loss0_sgd:.4f}, Final={loss1_sgd:.4f}")
 
     assert loss1_rcd < loss0_rcd, "RCD loss did not decrease"
     assert loss1_adam < loss0_adam, "Adam loss did not decrease"
