@@ -1,0 +1,3 @@
+1. Check for numerical stability of gradients, no NaNs or infinities.
+2. Add a simple non-convex function.
+3. Add a test in SCD to check if the coordinate selected is the one corresponding to steepest gradient.
