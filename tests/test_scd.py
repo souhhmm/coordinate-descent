@@ -519,13 +519,23 @@ def test_coordinate_wise_update():
         x_prev = x.detach().clone()
         optimizer.zero_grad()
         f.loss(x).backward()
+        
+        gradients = x.grad.detach().clone()
+        abs_grads = torch.abs(gradients)
+        steepest_idx = torch.argmax(abs_grads).item()
+        
         optimizer.step()
+        
         x_new = x.detach()
         diff = x_new - x_prev
 
         # count number of coordinates that changed
         num_changed = (diff.abs() > 1e-8).sum().item()
         assert num_changed == 1, f"More than one coordinate changed: {diff}"
+        
+        # check for steeptest update
+        changed_idx = torch.nonzero(diff.abs() > 1e-8).item()
+        assert changed_idx == steepest_idx, "Coordinate updated is not the steepest gradient"
 
 
 def test_lr_zero():
