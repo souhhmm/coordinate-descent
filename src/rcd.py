@@ -32,7 +32,13 @@ class RandomizedCoordinateDescent(Optimizer):
                 grad = p.grad.data
                 if grad.numel() == 0:
                     continue
-
+                
+                if torch.isnan(grad).any():
+                    raise ValueError("Detected NaN in gradient")
+                
+                if torch.isinf(grad).any():
+                    raise ValueError("Detected Inf in gradient")
+                
                 # choose a random index
                 idx = torch.randint(0, grad.numel(), (1,)).item()
 

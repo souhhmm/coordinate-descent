@@ -32,7 +32,13 @@ class SteepestCoordinateDescent(Optimizer):
                 grad = p.grad.data
                 if grad.numel() == 0:
                     continue
-
+                
+                if torch.isnan(grad).any():
+                    raise ValueError("Detected NaN in gradient")
+                
+                if torch.isinf(grad).any():
+                    raise ValueError("Detected Inf in gradient")
+                
                 # flatten grad and find index with max absolute value
                 flat_grad = grad.view(-1)
                 idx = torch.argmax(torch.abs(flat_grad)).item()
