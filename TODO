@@ -1,2 +1,1 @@
-Check for numerical stability of gradients, no NaNs or infinities.
 Add a simple non-convex function.
